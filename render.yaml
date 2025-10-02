@@ -58,9 +58,11 @@ services:
     name: pat-postgres
     plan: free
     region: oregon
+    runtime: postgresql
 
   # Redis Database
   - type: redis
     name: pat-redis
     plan: free
     region: oregon
+    ipAllowList: []
