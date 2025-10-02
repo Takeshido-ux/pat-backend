@@ -12,33 +12,8 @@ services:
         value: production
       - key: PORT
         value: 3000
-      - key: DB_HOST
-        fromDatabase:
-          name: pat-postgres
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: pat-postgres
-          property: port
-      - key: DB_USERNAME
-        fromDatabase:
-          name: pat-postgres
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: pat-postgres
-          property: password
-      - key: DB_NAME
-        fromDatabase:
-          name: pat-postgres
-          property: database
       - key: JWT_SECRET
         generateValue: true
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: pat-redis
-          property: connectionString
       - key: WAHA_URL
         value: https://pat-waha.onrender.com
 
@@ -52,17 +27,3 @@ services:
     envVars:
       - key: WAHA_API_URL
         value: https://pat-waha.onrender.com
-
-  # PostgreSQL Database
-  - type: pserv
-    name: pat-postgres
-    plan: free
-    region: oregon
-    runtime: postgresql
-
-  # Redis Database
-  - type: redis
-    name: pat-redis
-    plan: free
-    region: oregon
-    ipAllowList: []
