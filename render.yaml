@@ -1,0 +1,68 @@
+services:
+  # Backend Service
+  - type: web
+    name: pat-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: oregon
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DB_HOST
+        fromDatabase:
+          name: pat-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: pat-postgres
+          property: port
+      - key: DB_USERNAME
+        fromDatabase:
+          name: pat-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: pat-postgres
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: pat-postgres
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: pat-redis
+          property: connectionString
+      - key: WAHA_URL
+        value: https://pat-waha.onrender.com
+
+  # WAHA Service
+  - type: web
+    name: pat-waha
+    env: docker
+    dockerfilePath: ./Dockerfile.waha
+    plan: free
+    region: oregon
+    envVars:
+      - key: WAHA_API_URL
+        value: https://pat-waha.onrender.com
+
+  # PostgreSQL Database
+  - type: pserv
+    name: pat-postgres
+    plan: free
+    region: oregon
+    databaseName: pat_db
+    user: pat_user
+
+  # Redis Database
+  - type: redis
+    name: pat-redis
+    plan: free
+    region: oregon

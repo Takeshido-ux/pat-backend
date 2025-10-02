@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: backend_postgres
+    environment:
+      POSTGRES_DB: backend_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: backend_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - backend_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: backend_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - backend_network
+
+  waha:
+    image: devlikeapro/waha
+    container_name: backend_waha
+    platform: linux/amd64
+    ports:
+      - "3001:3000"
+    environment:
+      - WAHA_API_URL=http://localhost:3001
+    volumes:
+      - waha_data:/app/sessions
+    networks:
+      - backend_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  waha_data:
+
+networks:
+  backend_network:
+    driver: bridge

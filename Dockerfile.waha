@@ -1,0 +1,22 @@
+# Используем официальный WAHA образ
+FROM devlikeapro/waha:latest
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Создаем директорию для сессий
+RUN mkdir -p /app/sessions
+
+# Устанавливаем пользователя для безопасности
+RUN addgroup -g 1001 -S waha
+RUN adduser -S waha -u 1001
+
+# Меняем владельца файлов
+RUN chown -R waha:waha /app
+USER waha
+
+# Открываем порт
+EXPOSE 3000
+
+# Запускаем WAHA
+CMD ["npm", "start"]
