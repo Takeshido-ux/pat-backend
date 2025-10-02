@@ -58,8 +58,6 @@ services:
     name: pat-postgres
     plan: free
     region: oregon
-    databaseName: pat_db
-    user: pat_user
 
   # Redis Database
   - type: redis
